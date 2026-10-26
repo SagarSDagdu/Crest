@@ -20,6 +20,8 @@ enum BrowserCommandPaletteMetrics {
     /// How far below full size the card's contents start while the card grows
     /// out of the address field, and end while it shrinks back.
     static let morphContentScale: CGFloat = 0.97
+    /// Keeps a click on the card's empty area from starting a move.
+    static let moveDragThreshold: CGFloat = 4
 
     static let searchFieldSpacing: CGFloat = 12
     static let searchFieldHorizontalPadding: CGFloat = 20

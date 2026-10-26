@@ -6,6 +6,7 @@ struct BrowserCommandPaletteContent: View {
     let morphNamespace: Namespace.ID?
     let overlayContentLeadingInset: CGFloat
     var overlayContentInsets: EdgeInsets? = nil
+    var overlayOffset: Binding<CGSize>? = nil
 
     @FocusState private var queryIsFocused: Bool
     @Environment(\.spaceContentIsInteractive) private var spaceContentIsInteractive
@@ -20,6 +21,7 @@ struct BrowserCommandPaletteContent: View {
             morphNamespace: morphNamespace,
             overlayContentLeadingInset: overlayContentLeadingInset,
             overlayContentInsets: overlayContentInsets,
+            overlayOffset: overlayOffset,
             queryIsFocused: $queryIsFocused
         )
         .task(id: canFocus) {

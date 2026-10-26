@@ -10,6 +10,8 @@ struct BrowserCommandPalette: View {
     let morphNamespace: Namespace.ID?
     let overlayContentLeadingInset: CGFloat
     let overlayContentInsets: EdgeInsets?
+    /// Nil where the host doesn't let the overlay card move.
+    let overlayOffset: Binding<CGSize>?
 
     @State private var model: BrowserCommandPaletteModel
 
@@ -32,6 +34,7 @@ struct BrowserCommandPalette: View {
         morphNamespace: Namespace.ID? = nil,
         overlayContentLeadingInset: CGFloat = 0,
         overlayContentInsets: EdgeInsets? = nil,
+        overlayOffset: Binding<CGSize>? = nil,
         emptySelectionActions: BrowserEmptySelectionPaletteActions? = nil,
         openings: [BrowserCommandPaletteOpening] = [.here],
         readPasteboard: () -> String? = { nil }
@@ -40,6 +43,7 @@ struct BrowserCommandPalette: View {
         self.morphNamespace = morphNamespace
         self.overlayContentLeadingInset = overlayContentLeadingInset
         self.overlayContentInsets = overlayContentInsets
+        self.overlayOffset = overlayOffset
         _model = State(
             initialValue: BrowserCommandPaletteModel(
                 browser: browser,
@@ -64,7 +68,8 @@ struct BrowserCommandPalette: View {
             presentation: presentation,
             morphNamespace: morphNamespace,
             overlayContentLeadingInset: overlayContentLeadingInset,
-            overlayContentInsets: overlayContentInsets
+            overlayContentInsets: overlayContentInsets,
+            overlayOffset: overlayOffset
         )
         .onChange(of: model.isCompletionSourceAvailable) { _, available in
             if !available { model.invalidateURLCompletion() }

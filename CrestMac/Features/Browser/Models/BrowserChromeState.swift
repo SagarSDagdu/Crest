@@ -33,6 +33,8 @@ final class BrowserChromeState {
         set { publish(newValue, into: \.commandPaletteModeStorage, as: \.commandPaletteMode) }
     }
     @ObservationIgnored private var commandPaletteModeStorage: BrowserCommandPaletteMode?
+    /// Drag offset from the palette's resting place, leading and down; lives as long as the window.
+    var commandPaletteOffset = CGSize.zero
     private(set) var addressFocusRequest = 0
     private(set) var startPageFocusRequest = 0
     private(set) var notice: BrowserNotice?

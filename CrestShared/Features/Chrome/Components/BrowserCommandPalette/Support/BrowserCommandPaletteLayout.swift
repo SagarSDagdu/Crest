@@ -55,6 +55,21 @@ enum BrowserCommandPaletteLayout {
         return max(BrowserCommandPaletteMetrics.overlayCardPadding, (availableHeight - tallestCard) / 2)
     }
 
+    /// Keeps the card padding on every side; an axis with no room to move stays at rest.
+    static func overlayOffset(_ offset: CGSize, cardSize: CGSize, availableSize: CGSize) -> CGSize {
+        let padding = BrowserCommandPaletteMetrics.overlayCardPadding
+        let restingLeading = (availableSize.width - cardSize.width) / 2
+        let restingTop = overlayTopInset(availableHeight: availableSize.height)
+        func clamped(_ value: CGFloat, resting: CGFloat, room: CGFloat) -> CGFloat {
+            let lower = padding - resting
+            let upper = room - padding - resting
+            return upper < lower ? 0 : min(max(value, lower), upper)
+        }
+        return CGSize(
+            width: clamped(offset.width, resting: restingLeading, room: availableSize.width - cardSize.width),
+            height: clamped(offset.height, resting: restingTop, room: availableSize.height - cardSize.height))
+    }
+
     static func overlayResultAreaHeight(availableHeight: CGFloat) -> CGFloat {
         max(
             BrowserCommandPaletteMetrics.minimumOverlayResultHeight,
