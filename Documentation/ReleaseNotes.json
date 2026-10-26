@@ -4593,6 +4593,10 @@
     "draggable-command-palette": {
       "category": "new",
       "message": "Drag the command palette by its edges to move it anywhere in the window. It opens where you left it until the window closes, and clicking an empty part of it no longer closes it."
+    },
+    "command-palette-drag-after-resize": {
+      "category": "internal",
+      "message": "After the window shrinks, dragging the command palette moves it from where it shows rather than from a position outside the window."
     }
   }
 }

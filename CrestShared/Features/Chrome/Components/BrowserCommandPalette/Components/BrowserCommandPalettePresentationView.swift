@@ -26,7 +26,8 @@ struct BrowserCommandPalettePresentationView: View {
                 let cardWidth = BrowserCommandPaletteLayout.overlayCardWidth(availableWidth: availableSize.width)
                 let cardSize = CGSize(width: cardWidth, height: cardHeight)
                 let offset = BrowserCommandPaletteLayout.overlayOffset(
-                    movedOffset, cardSize: cardSize, availableSize: availableSize)
+                    movedOffset(cardSize: cardSize, availableSize: availableSize),
+                    cardSize: cardSize, availableSize: availableSize)
 
                 ZStack {
                     BrowserCommandPaletteScrim(dismiss: model.dismiss)
@@ -86,8 +87,14 @@ struct BrowserCommandPalettePresentationView: View {
         }
     }
 
-    private var movedOffset: CGSize {
-        let kept = overlayOffset?.wrappedValue ?? .zero
+    /// Clamped first, so a drag after the window shrank starts from where the card shows.
+    private func keptOffset(cardSize: CGSize, availableSize: CGSize) -> CGSize {
+        BrowserCommandPaletteLayout.overlayOffset(
+            overlayOffset?.wrappedValue ?? .zero, cardSize: cardSize, availableSize: availableSize)
+    }
+
+    private func movedOffset(cardSize: CGSize, availableSize: CGSize) -> CGSize {
+        let kept = keptOffset(cardSize: cardSize, availableSize: availableSize)
         return CGSize(width: kept.width + dragTranslation.width, height: kept.height + dragTranslation.height)
     }
 
@@ -98,7 +105,7 @@ struct BrowserCommandPalettePresentationView: View {
             .updating($dragTranslation) { value, translation, _ in translation = value.translation }
             .onEnded { value in
                 guard let overlayOffset else { return }
-                let kept = overlayOffset.wrappedValue
+                let kept = keptOffset(cardSize: cardSize, availableSize: availableSize)
                 overlayOffset.wrappedValue = BrowserCommandPaletteLayout.overlayOffset(
                     CGSize(width: kept.width + value.translation.width, height: kept.height + value.translation.height),
                     cardSize: cardSize, availableSize: availableSize)
