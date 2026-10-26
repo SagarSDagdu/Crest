@@ -41,6 +41,13 @@ struct BrowserTabStatusSource {
     /// engine measures it.
     var audioSpectrum: BrowserAudioSpectrumFeed? { context.audioSpectrum(of: tabID) }
 
+    /// Whether a Peek the tab opened is still open in this window, shown or
+    /// not.
+    var hasOpenPeek: Bool { context.hasOpenPeek(tabID) }
+
+    /// Whether the window shows the tab now, so its Peek is on screen.
+    var isShown: Bool { context.window.shownTabIDs.contains(tabID) }
+
     /// The color the tab's page declares for itself, when it declares one.
     var siteTheme: BrowserTabIconAccent? { context.siteThemeAccent(of: tabID) }
 
@@ -71,6 +78,16 @@ struct BrowserTabStatusSource {
     /// Stops every tab sharing the tab's page takes part in.
     func stopSharing() {
         context.stopTabSharing(tabID)
+    }
+
+    /// Shows the tab, and with it the Peek it opened.
+    func showPeek() {
+        context.select(tabID)
+    }
+
+    /// Closes the Peek the tab opened.
+    func closePeek() {
+        context.closePeek(tabID)
     }
 
     /// Shows the tab at the other end of the tab sharing.

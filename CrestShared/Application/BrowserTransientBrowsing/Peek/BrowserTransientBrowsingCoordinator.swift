@@ -27,6 +27,15 @@ final class BrowserTransientBrowsingCoordinator {
         peeks.first { $0.request == request }?.motion
     }
 
+    /// The Peek open over tab `tabID` of the Space `assignment` names, which
+    /// stays open while another tab is shown. A Peek still staged behind a
+    /// drag is not open yet.
+    func openPeek(from tabID: UUID, in assignment: BrowserSpaceRuntimeAssignment) -> BrowserPeekRequest? {
+        peeks.first {
+            $0.phase == .committed && $0.request.sourceTabID == tabID && $0.request.assignment == assignment
+        }?.request
+    }
+
     func handleLinkDrag(_ event: any BrowserPeekInteractionEvent) {
         event.apply(to: self)
     }

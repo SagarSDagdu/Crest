@@ -131,6 +131,17 @@ struct BrowserSidebarListContext {
         pageAccess.audioSpectrum(runtimeAssignment(of: tabID))
     }
 
+    /// Whether a Peek the tab opened is still open in this window. Reading it
+    /// observes the window's Peeks.
+    @MainActor func hasOpenPeek(_ tabID: UUID) -> Bool {
+        pageAccess.hasOpenPeek(runtimeAssignment(of: tabID))
+    }
+
+    /// Closes the Peek the tab opened.
+    @MainActor func closePeek(_ tabID: UUID) {
+        pageAccess.closePeek(runtimeAssignment(of: tabID))
+    }
+
     @MainActor func unload(_ tabID: UUID) {
         pageAccess.unloadPage(tabID, assignment)
     }

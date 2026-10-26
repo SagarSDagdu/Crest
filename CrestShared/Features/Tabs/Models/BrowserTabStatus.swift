@@ -46,6 +46,14 @@ struct BrowserTabStatusMark: Equatable {
         actions: [.goToSharedTab, .stopSharing]
     )
 
+    /// A Peek the tab opened is still open.
+    static let peek = Self(
+        symbol: "eye.fill",
+        tint: SystemTint.teal.color,
+        title: LocalizedStringResource("Peek Open", comment: "A tab's mark while a Peek it opened is still open."),
+        actions: [.showPeek, .closePeek]
+    )
+
     // MARK: - Variables
 
     let symbol: String
@@ -127,6 +135,9 @@ struct BrowserTabStatus {
     /// The tab's page shows another tab.
     static let sharing = Self { tab in tab.isSharing ? .sharing : nil }
 
+    /// A Peek the tab opened is still open in this window, shown or not.
+    static let peek = Self { tab in tab.hasOpenPeek ? .peek : nil }
+
     /// The page plays sound, heard or muted. An engine may still call muted
     /// playback audible, so muting decides before audibility does.
     static let audio = Self { tab in
@@ -138,9 +149,9 @@ struct BrowserTabStatus {
     }
 
     #if os(macOS)
-        static let all = [agent, shared, sharing, audio]
+        static let all = [agent, shared, sharing, audio, peek]
     #else
-        static let all = [shared, sharing, audio]
+        static let all = [shared, sharing, audio, peek]
     #endif
 
     // MARK: - Variables

@@ -108,6 +108,9 @@ final class BrowserPagePool:
     @ObservationIgnored var isPeekOpen: (BrowserPeekRequest) -> Bool = { _ in false }
     /// Closes a Peek the window shows; the window's transient browsing does.
     @ObservationIgnored var dismissPeek: (BrowserPeekRequest) -> Void = { _ in }
+    /// The Peek open over a tab, shown or not; the window's transient browsing
+    /// answers, and reading it observes the window's Peeks.
+    @ObservationIgnored var openPeekRequest: (BrowserTabRuntimeAssignment) -> BrowserPeekRequest? = { _ in nil }
     @ObservationIgnored private let openModifiedLink: ModifiedLinkOpener
     @ObservationIgnored private let openPeek: (BrowserPeekRequest) -> Void
     @ObservationIgnored private let handleLinkDrag: (BrowserPeekInteractionEvent) -> Void

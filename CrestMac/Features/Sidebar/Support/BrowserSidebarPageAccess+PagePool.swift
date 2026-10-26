@@ -2,7 +2,7 @@ import Foundation
 
 extension BrowserSidebarPageAccess {
     /// Binds the sidebar's page seam to the window's card pool, which also
-    /// answers for a tab's sharing and the audio a row draws.
+    /// answers for a tab's sharing, the audio a row draws and its open Peek.
     init(pages: BrowserPagePool, browser: BrowserStore, spaceAccess: BrowserSpaceAccessController) {
         self.init(
             pages: pages, browser: browser, spaceAccess: spaceAccess,
@@ -21,6 +21,13 @@ extension BrowserSidebarPageAccess {
         }
         audioSpectrum = { assignment in
             pages.audioSpectrum(matching: assignment)
+        }
+        hasOpenPeek = { assignment in
+            pages.openPeekRequest(assignment) != nil
+        }
+        closePeek = { assignment in
+            guard let request = pages.openPeekRequest(assignment) else { return }
+            pages.dismissPeek(request)
         }
     }
 }

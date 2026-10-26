@@ -31,6 +31,18 @@ struct BrowserTabStatusAction {
         perform: { $0.showSharingCounterpart() }
     )
 
+    static let showPeek = Self(
+        title: LocalizedStringResource("Show Peek", comment: "Shows the tab that opened a Peek, and the Peek over it."),
+        symbol: "eye",
+        isAvailable: { !$0.isShown },
+        perform: { $0.showPeek() }
+    )
+
+    static let closePeek = Self(
+        title: LocalizedStringResource("Close Peek", comment: "Closes the Peek a tab opened."),
+        symbol: "xmark.circle"
+    ) { $0.closePeek() }
+
     static let stopSharing = Self(
         title: LocalizedStringResource("Stop Sharing", comment: "Stops the tab sharing a tab takes part in."),
         symbol: "stop.circle",

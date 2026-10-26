@@ -75,6 +75,13 @@ struct BrowserSidebarPageAccess {
     /// The engine's measure of the sound a tab's page plays, band by band, or
     /// nil where its engine does not measure it.
     var audioSpectrum: @MainActor (BrowserTabRuntimeAssignment) -> BrowserAudioSpectrumFeed? = { _ in nil }
+
+    /// Whether a Peek the tab opened is still open in this window, shown or
+    /// not. A shell without Peek answers no.
+    var hasOpenPeek: @MainActor (BrowserTabRuntimeAssignment) -> Bool = { _ in false }
+
+    /// Closes the Peek the tab opened.
+    var closePeek: @MainActor (BrowserTabRuntimeAssignment) -> Void = { _ in }
 }
 
 extension BrowserSidebarPageAccess {
