@@ -726,6 +726,16 @@ final class BrowserPagePool:
         return true
     }
 
+    /// Closes the Peek open over the tab `assignment` names, handing the
+    /// keyboard back first as `closePeek()` does.
+    func closePeek(over assignment: BrowserTabRuntimeAssignment) {
+        guard let request = openPeekRequest(assignment) else { return }
+        if let page = host.peekPage(over: assignment.tabID, where: { $0 == request }) {
+            returnFocus(fromPeek: page)
+        }
+        dismissPeek(request)
+    }
+
     /// Hands the keyboard back to the active tab's page as the Peek page
     /// holding it closes, as closing find hands it back to the page searched.
     /// An engine that focuses a page it shows, as Chromium does, gives the

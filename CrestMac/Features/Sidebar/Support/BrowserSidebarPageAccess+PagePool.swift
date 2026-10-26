@@ -26,8 +26,7 @@ extension BrowserSidebarPageAccess {
             pages.openPeekRequest(assignment) != nil
         }
         closePeek = { assignment in
-            guard let request = pages.openPeekRequest(assignment) else { return }
-            pages.dismissPeek(request)
+            pages.closePeek(over: assignment)
         }
     }
 }

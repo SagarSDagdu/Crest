@@ -4593,6 +4593,10 @@
     "peek-indicator-on-tab": {
       "category": "new",
       "message": "A tab that opened a Peek shows a Peek badge while the Peek stays open, even after you switch tabs. Use the badge to go back to the Peek or close it."
+    },
+    "peek-badge-close-returns-focus": {
+      "category": "internal",
+      "message": "Closing a Peek from its tab's badge hands the keyboard back to the page underneath, as the Peek's own Close button does."
     }
   }
 }
