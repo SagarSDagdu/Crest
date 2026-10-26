@@ -244,6 +244,14 @@ final class BrowserMacApplication {
         privateBrowser.tabLinkProvider = privatePages
         browser.tabCopying = pages
         privateBrowser.tabCopying = privatePages
+        privatePages.dismissPeek = { [weak privateTransientBrowsing] request in
+            let animation = CrestMotion.peekDismissal.unlessReducingMotion(
+                NSWorkspace.shared.accessibilityDisplayShouldReduceMotion)
+            withAnimation(animation) { _ = privateTransientBrowsing?.dismissPeek(request) }
+        }
+        privatePages.openPeekOverTab = { [weak privateTransientBrowsing] tab in
+            privateTransientBrowsing?.openPeek(from: tab.tabID, in: tab.spaceAssignment)
+        }
         let windowLayouts = BrowserWindowLayouts(defaults: sidebarDefaults)
         // The device store keeps whether setup was completed here, carried
         // once from what an older release kept in its defaults.

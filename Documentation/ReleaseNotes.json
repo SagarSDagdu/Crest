@@ -4597,6 +4597,10 @@
     "peek-badge-close-returns-focus": {
       "category": "internal",
       "message": "Closing a Peek from its tab's badge hands the keyboard back to the page underneath, as the Peek's own Close button does."
+    },
+    "peek-badge-private-and-mobile": {
+      "category": "internal",
+      "message": "The Peek badge also appears in private windows on the Mac and on iPhone and iPad, through each window's page store."
     }
   }
 }

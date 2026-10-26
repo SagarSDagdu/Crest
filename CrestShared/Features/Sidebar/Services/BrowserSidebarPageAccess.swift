@@ -77,7 +77,7 @@ struct BrowserSidebarPageAccess {
     var audioSpectrum: @MainActor (BrowserTabRuntimeAssignment) -> BrowserAudioSpectrumFeed? = { _ in nil }
 
     /// Whether a Peek the tab opened is still open in this window, shown or
-    /// not. A shell without Peek answers no.
+    /// not. Previews and fixtures that bind no page owner answer no.
     var hasOpenPeek: @MainActor (BrowserTabRuntimeAssignment) -> Bool = { _ in false }
 
     /// Closes the Peek the tab opened.
@@ -131,6 +131,12 @@ extension BrowserSidebarPageAccess {
             },
             setMuted: { muted, assignment in
                 pages.setMuted(muted, matching: assignment)
+            },
+            hasOpenPeek: { assignment in
+                pages.openPeekRequest(matching: assignment) != nil
+            },
+            closePeek: { assignment in
+                pages.closePeek(over: assignment)
             }
         )
     }

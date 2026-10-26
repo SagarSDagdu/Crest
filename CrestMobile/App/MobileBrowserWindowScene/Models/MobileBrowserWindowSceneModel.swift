@@ -216,6 +216,7 @@ final class MobileBrowserWindowSceneModel {
 
         privateBrowser.tabLinkProvider = privatePages
         privateBrowser.tabCopying = privatePages
+        privatePages.transientBrowsing = privateTransientBrowsing
         return PrivateBrowsingRuntime(
             browser: privateBrowser, pages: privatePages, navigation: privateNavigation,
             transientBrowsing: privateTransientBrowsing)

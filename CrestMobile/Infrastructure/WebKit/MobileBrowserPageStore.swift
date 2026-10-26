@@ -66,6 +66,8 @@ final class MobileBrowserPageStore:
     @ObservationIgnored let linkDestinationHost: BrowserLinkDestinationHost
     @ObservationIgnored private let openModifiedLink: ModifiedLinkOpener
     @ObservationIgnored private let openPeek: (BrowserPeekRequest) -> Void
+    /// The scene's Peeks, which the sidebar's Peek badges read and close.
+    @ObservationIgnored weak var transientBrowsing: BrowserTransientBrowsingCoordinator?
     @ObservationIgnored private let browsingMode: BrowserBrowsingMode
     @ObservationIgnored let usesEphemeralWebsiteDataStores: Bool
     @ObservationIgnored private let pageZoomPreferences: BrowserDefaultPageZoomStore
@@ -156,6 +158,7 @@ final class MobileBrowserPageStore:
                 browser.openModifiedLink(url, in: spaceID, selecting: selecting)
             },
             openPeek: { request in transientBrowsing.presentPeek(request) })
+        self.transientBrowsing = transientBrowsing
     }
 
     var activeURL: URL? { activePage?.live.displayURL }
@@ -373,6 +376,15 @@ final class MobileBrowserPageStore:
     /// Mutes or unmutes the sound the tab's page plays.
     func setMuted(_ muted: Bool, matching assignment: BrowserTabRuntimeAssignment) {
         mediaSessionStore?.setMuted(muted, of: assignment)
+    }
+
+    func openPeekRequest(matching assignment: BrowserTabRuntimeAssignment) -> BrowserPeekRequest? {
+        transientBrowsing?.openPeek(from: assignment.tabID, in: assignment.spaceAssignment)
+    }
+
+    func closePeek(over assignment: BrowserTabRuntimeAssignment) {
+        guard let request = openPeekRequest(matching: assignment) else { return }
+        transientBrowsing?.dismissPeek(request)
     }
 
     /// Lets go of everything the private workspace kept, in each of the

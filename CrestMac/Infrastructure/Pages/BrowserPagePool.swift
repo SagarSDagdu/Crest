@@ -110,7 +110,7 @@ final class BrowserPagePool:
     @ObservationIgnored var dismissPeek: (BrowserPeekRequest) -> Void = { _ in }
     /// The Peek open over a tab, shown or not; the window's transient browsing
     /// answers, and reading it observes the window's Peeks.
-    @ObservationIgnored var openPeekRequest: (BrowserTabRuntimeAssignment) -> BrowserPeekRequest? = { _ in nil }
+    @ObservationIgnored var openPeekOverTab: (BrowserTabRuntimeAssignment) -> BrowserPeekRequest? = { _ in nil }
     @ObservationIgnored private let openModifiedLink: ModifiedLinkOpener
     @ObservationIgnored private let openPeek: (BrowserPeekRequest) -> Void
     @ObservationIgnored private let handleLinkDrag: (BrowserPeekInteractionEvent) -> Void
@@ -726,10 +726,14 @@ final class BrowserPagePool:
         return true
     }
 
+    func openPeekRequest(matching assignment: BrowserTabRuntimeAssignment) -> BrowserPeekRequest? {
+        openPeekOverTab(assignment)
+    }
+
     /// Closes the Peek open over the tab `assignment` names, handing the
     /// keyboard back first as `closePeek()` does.
     func closePeek(over assignment: BrowserTabRuntimeAssignment) {
-        guard let request = openPeekRequest(assignment) else { return }
+        guard let request = openPeekRequest(matching: assignment) else { return }
         if let page = host.peekPage(over: assignment.tabID, where: { $0 == request }) {
             returnFocus(fromPeek: page)
         }

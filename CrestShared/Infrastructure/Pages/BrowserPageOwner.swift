@@ -36,6 +36,10 @@ protocol BrowserPageOwner: AnyObject, BrowserTabCopying, BrowserTabLinkProviding
     func mediaSession(matching assignment: BrowserTabRuntimeAssignment) -> BrowserMediaSessionSnapshot?
     /// Mutes or unmutes the page of the tab `assignment` names.
     func setMuted(_ muted: Bool, matching assignment: BrowserTabRuntimeAssignment)
+    /// The Peek the tab `assignment` names opened, while it stays open, shown or not.
+    func openPeekRequest(matching assignment: BrowserTabRuntimeAssignment) -> BrowserPeekRequest?
+    /// Closes the Peek the tab `assignment` names opened.
+    func closePeek(over assignment: BrowserTabRuntimeAssignment)
 
     /// A lease on a page the core opens in `space` for a transient request,
     /// on `opener`'s engine when another page opened it.

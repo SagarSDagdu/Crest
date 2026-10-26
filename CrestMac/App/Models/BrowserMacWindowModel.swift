@@ -45,7 +45,7 @@ final class BrowserMacWindowModel {
                 NSWorkspace.shared.accessibilityDisplayShouldReduceMotion)
             withAnimation(animation) { _ = transientBrowsing?.dismissPeek(request) }
         }
-        pages.openPeekRequest = { [weak transientBrowsing] tab in
+        pages.openPeekOverTab = { [weak transientBrowsing] tab in
             transientBrowsing?.openPeek(from: tab.tabID, in: tab.spaceAssignment)
         }
         closeGate = BrowserWindowCloseGate(core: browser.core) { [windowID = browser.windowID] in
