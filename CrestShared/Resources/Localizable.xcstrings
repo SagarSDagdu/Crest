@@ -5617,6 +5617,12 @@
         }
       }
     },
+    "Edit URL" : {
+
+    },
+    "Edit URL…" : {
+
+    },
     "Edit Website Rule" : {
 
     },
@@ -14956,6 +14962,9 @@
           }
         }
       }
+    },
+    "URL" : {
+
     },
     "URL completion: %@. Press Tab or Right Arrow to accept." : {
 

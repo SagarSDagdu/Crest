@@ -1498,6 +1498,13 @@ struct ChangeExtension: PageRequest, Equatable, Sendable {
     let change: ExtensionChange
 }
 
+struct ChangeSavedAddress: Intent, SessionIntent, Equatable, Sendable {
+    let workspaceID: UUID
+    let spaceID: UUID
+    let tabID: UUID
+    let input: String
+}
+
 struct CheckBeforeUnload: Equatable, Sendable {
     let pageID: UUID
 }

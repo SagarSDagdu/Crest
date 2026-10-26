@@ -11,6 +11,7 @@ struct PinnedTabTile: View {
     let reorder: BrowserSidebarReorderContext?
     @Binding var iconRequest: BrowserTabRuntimeAssignment?
     let renameTab: () -> Void
+    let editSavedLocation: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -113,7 +114,8 @@ struct PinnedTabTile: View {
                     isLoaded: loaded,
                     dragState: grid.dragState,
                     renameTab: renameTab,
-                    changeIcon: beginChangingIcon
+                    changeIcon: beginChangingIcon,
+                    editSavedLocation: editSavedLocation
                 )
             }
         }

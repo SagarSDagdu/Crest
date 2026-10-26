@@ -7,6 +7,7 @@ struct BrowserTabOrganizationMenuContent: View {
     var isLoaded = true
     var renameTab: (() -> Void)? = nil
     var changeIcon: (() -> Void)? = nil
+    var editSavedLocation: (() -> Void)? = nil
 
     @Environment(\.layoutDirection) private var layoutDirection
 
@@ -17,6 +18,7 @@ struct BrowserTabOrganizationMenuContent: View {
         isLoaded = menu.isLoaded
         renameTab = menu.renameTab
         changeIcon = menu.changeIcon
+        editSavedLocation = menu.editSavedLocation
     }
 
     private var browser: BrowserStore { context.browser }
@@ -61,6 +63,7 @@ struct BrowserTabOrganizationMenuContent: View {
                 isLoaded: isLoaded,
                 pullNewIcon: { context.pullNewIcon(tab.id) },
                 restoreSavedLocation: context.restoreSavedLocation.map { restore in { restore(tab.id) } },
+                editSavedLocation: editSavedLocation,
                 performIfCurrent: performIfCurrent,
                 replaceSavedLocation: {
                     browser.replaceTabSavedLocationWithCurrent(

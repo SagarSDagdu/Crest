@@ -6,6 +6,7 @@ struct BrowserTabEditActions: View {
     let isLoaded: Bool
     let pullNewIcon: (() -> Void)?
     let restoreSavedLocation: (() -> Void)?
+    let editSavedLocation: (() -> Void)?
     let performIfCurrent: (() -> Void) -> Void
     let replaceSavedLocation: () -> Void
     let clearIcon: () -> Void
@@ -15,6 +16,12 @@ struct BrowserTabEditActions: View {
         if tab.supportsSavedLocationEditing {
             Menu("Edit Tab", systemImage: "pencil") {
                 Group {
+                    if let editSavedLocation {
+                        Button("Edit URL…", systemImage: "link") {
+                            performIfCurrent(editSavedLocation)
+                        }
+                    }
+
                     Button(
                         "Replace with Current URL",
                         systemImage: "arrow.triangle.2.circlepath"

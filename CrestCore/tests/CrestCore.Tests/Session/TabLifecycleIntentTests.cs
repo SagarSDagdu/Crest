@@ -68,4 +68,30 @@ public sealed partial class BrowserContractsTests {
         Assert.Empty(core.Current.Spaces[0].SplitGroups);
     }
 
+    [Fact]
+    public void ChangingASavedAddressKeepsOnlyAnAddressAndLeavesThePageWhereItIs() {
+        using var device = new TestDevice(MaximalDocument());
+        var core = device.Authority;
+        TestGrants.UnlockGuarded(device.Send, device.Workspace, core.Current);
+        var space = core.Current.Spaces[0].Id;
+        Guid article = Guid.Parse("B61250D4-3D4E-4DD6-8871-0BB326669142"), open = Guid.Parse("942AC076-B0D8-454B-9EEB-3791E6113F77");
+        TabState Tab(Guid id) => core.Current.Spaces[0].Tabs.Single(tab => tab.Id == id);
+        var shown = Tab(article).Url;
+
+        // Typed input resolves as the address field resolves it; the page the
+        // tab shows waits to be sent there.
+        device.Send(new ChangeSavedAddress(device.Workspace, space, article, " github.com/pulls "));
+        Assert.Equal(("https://github.com/pulls", shown), (Tab(article).SavedUrl, Tab(article).Url));
+        Assert.True(Tab(article).IsAwayFromSavedAddress);
+
+        // A search, a script or nothing at all never becomes a saved address,
+        // and a tab that belongs nowhere has none to change.
+        foreach (var input in new[] { "pull requests", "javascript:alert(1)", "  " })
+            Assert.IsType<UnsupportedAddress>(Assert.Throws<Rejected>(() =>
+                device.Send(new ChangeSavedAddress(device.Workspace, space, article, input))).Rejection);
+        Assert.Equal("https://github.com/pulls", Tab(article).SavedUrl);
+        Assert.IsType<NoSavedAddress>(Assert.Throws<Rejected>(() =>
+            device.Send(new ChangeSavedAddress(device.Workspace, space, open, "https://example.org"))).Rejection);
+    }
+
 }

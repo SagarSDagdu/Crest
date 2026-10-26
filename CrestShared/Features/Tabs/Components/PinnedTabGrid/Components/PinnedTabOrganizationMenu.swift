@@ -8,6 +8,7 @@ struct PinnedTabOrganizationMenu: View {
     let dragState: BrowserTabDragState?
     let renameTab: () -> Void
     let changeIcon: () -> Void
+    let editSavedLocation: () -> Void
 
     var body: some View {
         BrowserTabOrganizationMenu(
@@ -16,7 +17,8 @@ struct PinnedTabOrganizationMenu: View {
             assignment: assignment,
             isLoaded: isLoaded,
             renameTab: renameTab,
-            changeIcon: changeIcon
+            changeIcon: changeIcon,
+            editSavedLocation: editSavedLocation
         )
         .tint(.primary)
         .onAppear { dragState?.contextMenuDidOpen(for: assignment) }

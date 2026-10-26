@@ -11,6 +11,8 @@ struct PinnedTabGridContent: View {
     @State private var renamingAssignment: BrowserTabRuntimeAssignment?
     @State private var iconRequest: BrowserTabRuntimeAssignment?
     @State private var draftTitle = ""
+    @State private var addressAssignment: BrowserTabRuntimeAssignment?
+    @State private var draftAddress = ""
     private var tabScale: Double { BrowserDeviceAppearanceStore.shared.tabScale }
     private var pinColumns: Int { BrowserDeviceAppearanceStore.shared.pinColumns }
 
@@ -37,7 +39,8 @@ struct PinnedTabGridContent: View {
             ForEach(tabs, id: \.id) { tab in
                 PinnedTabTile(
                     tab: tab, grid: grid, reorder: reorderContext, iconRequest: $iconRequest,
-                    renameTab: { beginRenaming(tab) }
+                    renameTab: { beginRenaming(tab) },
+                    editSavedLocation: { beginEditingAddress(tab) }
                 )
             }
             RoundedRectangle(cornerRadius: BrowserSidebarMetrics.layerCornerRadius(), style: .continuous)
@@ -73,6 +76,19 @@ struct PinnedTabGridContent: View {
                 .accessibilityIdentifier("confirm-rename-tab")
 
             Button("Cancel", role: .cancel) { renamingAssignment = nil }
+        }
+        .alert("Edit URL", isPresented: isEditingAddressBinding) {
+            TextField("URL", text: $draftAddress)
+                .autocorrectionDisabled()
+
+            Button("Save", action: commitAddress)
+                .disabled(draftAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+            Button("Cancel", role: .cancel) { addressAssignment = nil }
+        }
+        .onChange(of: addressAssignmentIsLive) { _, isLive in
+            guard !isLive else { return }
+            addressAssignment = nil
         }
         .onChange(of: renamingAssignmentIsLive) { _, isLive in
             guard !isLive else { return }
@@ -129,6 +145,40 @@ struct PinnedTabGridContent: View {
                 profileID: renamingAssignment.profileID
             )
         )
+    }
+
+    private var isEditingAddressBinding: Binding<Bool> {
+        Binding(
+            get: { addressAssignmentIsLive },
+            set: { isPresented in
+                guard !isPresented else { return }
+                addressAssignment = nil
+            }
+        )
+    }
+
+    private var addressAssignmentIsLive: Bool {
+        guard let addressAssignment else { return false }
+        return isCurrentAndUnlocked(addressAssignment)
+    }
+
+    private func beginEditingAddress(_ tab: TabStateModel) {
+        let assignment = runtimeAssignment(for: tab.id)
+        guard isCurrentAndUnlocked(assignment) else { return }
+        draftAddress = tab.savedURL ?? tab.address?.absoluteString ?? ""
+        addressAssignment = assignment
+    }
+
+    /// Saves the new address and opens the tab there, as Return to Saved URL
+    /// would, so an unloaded pin does not keep its old page.
+    private func commitAddress() {
+        guard let addressAssignment else { return }
+        self.addressAssignment = nil
+        guard let context = grid.context, isCurrentAndUnlocked(addressAssignment),
+            context.browser.changeSessionSavedAddress(
+                draftAddress, tabID: addressAssignment.tabID, in: addressAssignment.spaceID)
+        else { return }
+        context.restoreSavedLocation?(addressAssignment.tabID)
     }
 
     private var projection: BrowserPinnedTabReorderLayout {
